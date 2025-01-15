@@ -1,11 +1,25 @@
 "use client";
-import { Bookmark, Heart, LayoutDashboard, LogIn, UserPlus } from 'lucide-react';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { useUser } from '@auth0/nextjs-auth0/client';
+import { Bookmark, Heart, LayoutDashboard, LogIn, LogOut, UserPlus } from 'lucide-react';
 import Image from 'next/image'
 import Link from 'next/link'
-import { usePathname } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 import React from 'react'
 
 const Header = () => {
+
+  const { user, isLoading } = useUser();
+  const router = useRouter();
+
+  // console.log("USer", user, isLoading);
 
   const pathname = usePathname();
 
@@ -26,6 +40,8 @@ const Header = () => {
       icon: <Bookmark size={20} />
     }
   ];
+
+  if(isLoading) return null;
 
   return (
     <header className="min-h-[10vh] px-16 py-6 w-full bg-white flex justify-between items-center shadow-sm">
@@ -55,25 +71,58 @@ const Header = () => {
         </ul>
       </nav>
 
-      <div className="flex items-center gap-4">
-        <Link 
-          href="/api/auth/login"
-          className="py-2 px-6 text-sm flex items-center gap-2 font-bold rounded-lg
+      {
+        user?.sub && !isLoading && <div>
+          <DropdownMenu modal={false}>
+            <DropdownMenuTrigger className="outline-none border-none">
+              <div className="bg-[#6c5ce7]/15 flex items-center justify-center gap-2 rounded-lg cursor-pointer">
+                <span className="pl-2 text-[#6c5ce7] text-sm font-bold">
+                  {user?.name || "User"}
+                </span>
+                <Image
+                  src={user?.picture || ""}
+                  width={40}
+                  height={40}
+                  alt="avatar"
+                  className="p-1 rounded-lg"
+                />
+              </div>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent className="w-[160px]">
+              <DropdownMenuLabel>My Account</DropdownMenuLabel>
+              <DropdownMenuSeparator />
+              <DropdownMenuItem  className="cursor-pointer"
+                    onClick={() => router.push("/api/auth/logout")}>
+                <LogOut />
+                Log Out
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+        </div>
+      }
+
+      {
+        !user?.sub && !isLoading && (<div className="flex items-center gap-4">
+          <Link
+            href="/api/auth/login"
+            className="py-2 px-6 text-sm flex items-center gap-2 font-bold rounded-lg
             bg-[#6c5ce7]/15 text-[#6c5ce7] hover:bg-[#6c5ce7]/30 transition-all duration-300 ease-in-out"
-        >
-          <LogIn size={20} />
-          Login
-        </Link>
-        <Link
+          >
+            <LogIn size={20} />
+            Login
+          </Link>
+          <Link
             href="/api/auth/login"
             className={`py-2 px-6 text-sm flex items-center gap-2 font-bold rounded-lg
                 bg-[#6c5ce7] text-white hover:bg-[#6c5ce7]/90 transition-all duration-300 ease-in-out
               `}
           >
-            <UserPlus size={20}/>
+            <UserPlus size={20} />
             Register
           </Link>
-      </div>
+        </div>)
+      }
+
     </header>
   )
 }
