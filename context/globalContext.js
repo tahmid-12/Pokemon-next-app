@@ -5,9 +5,9 @@ const GlobalContext = createContext();
 
 export const GlobalContextProvider = ({ children }) => {
 
-    const { loading, fetchPokemon, pokemonData } = usePokemonData();
+    const { loading, fetchPokemon, pokemonData, pokemonListDetails } = usePokemonData();
 
-    return <GlobalContext.Provider value={{loading, fetchPokemon, pokemonData}}>{children}</GlobalContext.Provider>
+    return <GlobalContext.Provider value={{loading, fetchPokemon, pokemonData, pokemonListDetails}}>{children}</GlobalContext.Provider>
 }
 
 export const useGlobalContext = () => {
