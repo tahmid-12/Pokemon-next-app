@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable react-hooks/exhaustive-deps */
 "use client";
 import Header from "@/components/Header";
 import { useGlobalContext } from "@/context/globalContext";
@@ -12,14 +14,21 @@ interface Props {
     id: string;
   };
 }
-function page({ params }: Props) {
+function Page({ params }: Props) {
+
+  // const { id } = params;
+
   const { fetchPokemonByName, loading, activePokemon } = useGlobalContext();
-  const { id } = params;
 
   // get pokemon by name
   useEffect(() => {
-    fetchPokemonByName(id);
-  }, [id]);
+    const getId = async () => {
+      const paramId = await params.id;
+      fetchPokemonByName(paramId);
+    }
+    getId();
+    // fetchPokemonByName(id);
+  }, [params]);
 
   console.log("activePokemon", activePokemon);
 
@@ -182,4 +191,4 @@ function page({ params }: Props) {
   );
 }
 
-export default page;
+export default Page;
