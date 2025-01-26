@@ -2,12 +2,12 @@
 import Header from "@/components/Header";
 import PokemonCard from "@/components/PokemonCard";
 import { useGlobalContext } from "@/context/globalContext";
-import { useUser } from "@auth0/nextjs-auth0/client";
+// import { useUser } from "@auth0/nextjs-auth0/client";
 // import Image from "next/image";
 
 export default function Home() {
 
-  const { isLoading } = useUser();
+  // const { isLoading } = useUser();
   const { loading,pokemonListDetails } = useGlobalContext();
 
   // console.log("pokemon", pokemonListDetails);
