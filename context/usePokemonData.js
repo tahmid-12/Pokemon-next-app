@@ -20,13 +20,14 @@ export const usePokemonData = () => {
 
         try {
             const offset = (page - 1) * 50;
-            const res = await axios.get(`${pokemonBaseUrl}/pokemon?limit=20&offset=${offset}`);
+            const res = await axios.get(`${pokemonBaseUrl}/pokemon?offset=${offset}&limit=20`);
 
-            setLoading(false);
+            // setLoading(false);
             // console.log(res.data.results);
-            setPokemonData((prev) => [...prev, res.data.results]);
+            // setPokemonData((prev) => [...prev, res.data.results]);
+            setPokemonData((prev) => [...prev, ...res.data.results]);
             setCurrentPage(page);
-
+            setLoading(false);
         } catch (error) {
             console.log(error);
         }
@@ -46,7 +47,7 @@ export const usePokemonData = () => {
 
         try {
             const details = await Promise.all(
-                pokemonData[0].map(async (pokemon) => {
+                pokemonData.map(async (pokemon) => {
                     const res = await axios.get(pokemon.url);
                     return res.data;
                 })
@@ -73,6 +74,10 @@ export const usePokemonData = () => {
         }
     }
 
+    const loadMore = () => {
+        fetchPokemon(currentPage + 1);
+    }
+
     useEffect(() => {
         fetchPokemon();
         fetchAllPokemon();
@@ -85,5 +90,5 @@ export const usePokemonData = () => {
     }, [pokemonData]);
 
 
-    return { fetchPokemon, loading, pokemonData, pokemonListDetails, fetchPokemonByName, activePokemon };
+    return { fetchPokemon, loading, pokemonData, pokemonListDetails, fetchPokemonByName, activePokemon,loadMore };
 }
