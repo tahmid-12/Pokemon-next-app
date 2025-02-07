@@ -38,7 +38,7 @@ export default function Home() {
         </div>
       </section>
 
-          {/* 2:09:38 */}
+          
       {pokemonListDetails.length > 15 && (
         <div className="mt-4 mb-10 flex items-center justify-center">
           <button
